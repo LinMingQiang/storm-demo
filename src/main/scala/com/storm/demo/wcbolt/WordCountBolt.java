@@ -28,39 +28,14 @@ public class WordCountBolt extends BaseRichBolt {
 			OutputCollector outputCollector) {
 		this.outputCollector = outputCollector;
 	}
-	//定时器.如果加了这个函数，那在execute必须加TupleUtils.isTick(tuple)的判断。不然tuple里面会带一个Long类型的数据。定时会
-	//发一条Long类型的数据来做判断。可以打印出来看一下就知道了
-/*	 @Override  
-	    public Map<String, Object> getComponentConfiguration() {  
-	        Map<String, Object> conf = new HashMap<String, Object>();  
-	        conf.put(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS, 1L);//加入Tick时间窗口，进行统计  。1s一次。如果不要窗口就去掉
-	        return conf;  
-	    }*/
 	@Override
 	public void execute(Tuple tuple) {
-		/*if(TupleUtils.isTick(tuple)){  
-			//一般写数据库 等操作都是 隔段时间做一次。
-            System.out.println("发送 ###### "+counts.size());  
-            outputCollector.emit(new Values(counts));  
-            return;
-    	}else{
-    		String word = tuple.getString(0);  
-            Integer count = counts.get(word);  
-            if(count == null)  
-                count = 0;  
-            count++;  
-            counts.put(word,count);  
-    	}*/
         String word = tuple.getString(0);  
-        // 获取该单词对应的计数  
         Integer count = counts.get(word);  
         if(count == null)   count = 1;  
         else count++;  
-        // 将单词和对应的计数加入map中  
-        counts.put(word,count);  
-        System.out.println(word+" - "+count);
-        // 发送单词和计数（分别对应字段word和count）  
-        outputCollector.emit(new Values(word, count));
+        counts.put(word,count); 
+        outputCollector.emit(new Values(word, count));//发送给下一个bolt
         outputCollector.ack(tuple);//通过ack观测器，这条数据处理成功
 	}
 

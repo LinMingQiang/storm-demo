@@ -13,6 +13,8 @@ import org.apache.storm.kafka.KafkaSpout
 import org.apache.storm.spout.SchemeAsMultiScheme
 import org.apache.storm.kafka.StringScheme
 import scala.collection.JavaConverters._
+import com.storm.demo.wcbolt.PrintlnResultBolt
+
 object WordCountTest {
   def main(args: Array[String]): Unit = {
     runKafkaSpout
@@ -65,7 +67,11 @@ object WordCountTest {
     builder
       .setBolt("WordCountBolt", new WordCountBolt(), 12)
       .fieldsGrouping("SplitSentenceBolt", new Fields("word")); //按上面的word字段来分组
+    builder
+      .setBolt("PrintlnResultBolt", new PrintlnResultBolt(), 12)
+      .shuffleGrouping("WordCountBolt"); //打印输出
 
+    
     val conf = new Config();
     conf.setDebug(false);
     conf.setNumWorkers(10);
