@@ -1,11 +1,11 @@
-> # storm demo
+# storm demo
 storm version 1.1.0
 kafka version 0.8
 
 * 提供简单的storm 的wordcount demoe
 * 提供 Storm + Kafka + hbase 的统计demoe
 
-> storm的安装
+> # storm的安装
 ```
 * 解压文件：
 tar -zxvf apache-storm-1.1.0.tar.gz
